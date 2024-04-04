@@ -1,0 +1,57 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: portal
+  description: Frontend web del portal
+  labels:
+    category: web
+    team: frontend_team
+  annotations:
+    deployment_strategy: canary
+  urls:
+    - url: https://github.com/mi_empresa/portal
+      type: git
+spec:
+  type: frontend
+  lifecycle: production
+  owner: equipo_frontend
+  providesApis:
+    - portal-private-api
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: portal-private-api
+  description: API privada del portal
+  labels:
+    category: backend
+    team: backend_team
+  annotations:
+    deployment_strategy: blue_green
+  urls:
+    - url: https://github.com/mi_empresa/portal-private-api
+      type: git
+spec:
+  type: api
+  lifecycle: production
+  owner: equipo_api
+  consumesApis:
+    - portal-private-db
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: portal-private-db
+  description: Base de datos exclusiva para el API privado del portal
+  labels:
+    category: database
+    team: db_team
+  annotations:
+    backup_policy: weekly
+  urls:
+    - url: https://mi_empresa.com/db-portal
+      type: documentation
+spec:
+  type: database
+  lifecycle: production
+  owner: equipo_db
